@@ -18,25 +18,103 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun find-file-by-extension ( dirname extension )
+(defun walk-file-by-extension (dirname extension 
+			      &key 
+				(fn #'(lambda(x) (write-line (namestring x))))
+				(fn-extension 
+				 #'(lambda (x)
+				     (string= (pathname-type x) extension)))
+				(dir-ignore 
+				 #'(lambda (x) (string= (first (last (pathname-directory x))) ".git"))))
   "Пример использования:
-;;;;(find-file-by-extension \"/home/namatv/develop/git/clisp/\" \"asd\")"
+;;;; (walk-file-by-extension  \"/_storage/otd11/namatv/develop/git/clisp/\" \"\" :fn-extension #'(lambda (x) (member (pathname-type x) '(\"lisp\" \"txt\") :test #'string=)))
+;;;;(walk-file-by-extension \"/_storage/otd11/namatv/develop/git/clisp/\" \"asd\")
+"
+  (cl-fad:walk-directory dirname
+			 #'(lambda (x) 
+			     (unless (cl-fad:directory-pathname-p x)
+			       (funcall fn x)))
+			 :directories :breadth-first 
+			 :test #'(lambda (x) 
+				   (cond
+				     ((funcall dir-ignore x) nil)
+				     ((cl-fad:directory-pathname-p x))
+				     ((funcall fn-extension x))
+				     (t nil)))))
+
+;;;; (walk-file-by-extension "/_storage/otd11/namatv/develop/git/clisp/" "asd")
+;;;; (walk-file-by-extension  "/_storage/otd11/namatv/develop/git/clisp/" "" :fn-extension #'(lambda (x) (member (pathname-type x) '("lisp" "txt") :test #'string=)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun find-filename (dirname extension)
+"Возвращает список файлов, у которых расширение соответствует extension;
+Поиск начинается с каталога dirname, вглубь дерева каталогов;
+Елементами возврвщаемого списка являются строки;
+Пример использования:
+;;;; (find-filename  \"/_storage/otd11/namatv/develop/git/clisp/\"  \"asd\")
+"
   (let ((rez nil))
-    (cl-fad:walk-directory
+    (walk-file-by-extension 
      dirname
-     #'(lambda (x)
-	 (unless  (cl-fad:directory-exists-p x)
-	   (push (namestring x) rez)))
-     :directories :breadth-first
-     :test
-     #'(lambda (x)
-	 (cond
-	   ((and
-	     (cl-fad:directory-pathname-p x)
-	     (string= (first (last (pathname-directory x))) ".git")) nil)
-	   ((cl-fad:directory-pathname-p x))
-	   ((string= (pathname-type x) extension))
-	   (t nil))))
+     extension  
+     :fn #'(lambda (x) (push (namestring x) rez)))
     (reverse rez)))
 
+;;;; (find-filename  "/_storage/otd11/namatv/develop/git/clisp/"  "asd")
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun find-filename-directory (dirname extension)
+"Возвращает список каталогов, в которых присутствуют файлы с расширением extension;
+Поиск начинается с каталога dirname, вглубь дерева каталогов;
+Елементами возврвщаемого списка являются строки;
+Пример использования:
+;;;; (find-filename-directory \"/_storage/otd11/namatv/develop/git/clisp/\" \"asd\")
+"
+  (let ((rez nil))
+    (walk-file-by-extension 
+     dirname
+     extension  
+     :fn #'(lambda (x) (pushnew (namestring (cl-fad:pathname-directory-pathname x)) rez :test #'string=)))
+    (reverse rez)))
+
+;;;; (find-filename-directory "/_storage/otd11/namatv/develop/git/clisp/" "asd")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun walk-directory-by-name (dirname name &key (fn #'(lambda (x) (write-line (namestring x)))))
+  (cl-fad:walk-directory 
+   dirname
+   #'(lambda (x) 
+       (when (cl-fad:directory-pathname-p x)
+	 (funcall fn x)))
+   :directories t
+   :test #'(lambda (x) 
+	     (cond
+	       ((string= (first (last (pathname-directory x))) name))
+	       (t nil)))))
+
+;;;; (walk-directory-by-name "/_storage/otd11/namatv/develop/git/clisp" ".git")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun find-girectory-parent (dirname name)
+  (let ((rez nil))
+  (walk-directory-by-name
+   dirname
+   name
+   :fn #'(lambda (x)
+	   (pushnew
+	    (namestring
+	     (cl-fad:pathname-parent-directory x)) rez :test #'string=)
+	   ))
+  (reverse rez)))
+
+(find-girectory-parent "~/develop/git/clisp"  ".git")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;;; (walk-directory-by-name "~/develop/git/clisp" ".git")
+
+;;;; (find-filename  "~/develop/git/clisp"  "asd")

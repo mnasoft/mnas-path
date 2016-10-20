@@ -5,7 +5,7 @@
   :author "Your Name <your.name@example.com>"
   :license "Specify license here"
   :serial t
-  :depends-on (#:cl-fad) ;; 
+  :depends-on (#:cl-fad)
   :components ((:file "package")
                (:file "mnas-path")))
 
