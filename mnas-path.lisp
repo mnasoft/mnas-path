@@ -70,7 +70,7 @@
 Поиск начинается с каталога dirname, вглубь дерева каталогов;
 Елементами возврвщаемого списка являются строки;
 Пример использования:
-;;;; (find-filename-directory "/_storage/otd11/namatv/develop/git/clisp/" "asd")
+;;;; (find-filename-directory \"/_storage/otd11/namatv/develop/git/clisp/\" \"asd\")
 "
   (let ((rez nil))
     (walk-file-by-extension 
