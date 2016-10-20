@@ -15,3 +15,28 @@
     (if (not(equal (car dir-1) (car dir-2)))
 	(setf dir-1 nil
 	      dir-2 nil))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun find-file-by-extension ( dirname extension )
+  "Пример использования:
+;;;;(find-file-by-extension \"/home/namatv/develop/git/clisp/\" \"asd\")"
+  (let ((rez nil))
+    (cl-fad:walk-directory
+     dirname
+     #'(lambda (x)
+	 (unless  (cl-fad:directory-exists-p x)
+	   (push (namestring x) rez)))
+     :directories :breadth-first
+     :test
+     #'(lambda (x)
+	 (cond
+	   ((and
+	     (cl-fad:directory-pathname-p x)
+	     (string= (first (last (pathname-directory x))) ".git")) nil)
+	   ((cl-fad:directory-pathname-p x))
+	   ((string= (pathname-type x) extension))
+	   (t nil))))
+    (reverse rez)))
+
+
