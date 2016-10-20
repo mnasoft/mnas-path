@@ -83,12 +83,12 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun walk-directory-by-name (dirname name)
+(defun walk-directory-by-name (dirname name &key (fn #'(lambda (x) (write-line (namestring x)))))
   (cl-fad:walk-directory 
    dirname
    #'(lambda (x) 
        (when (cl-fad:directory-pathname-p x)
-	 (write-line (namestring x))))
+	 (funcall fn x)))
    :directories t
    :test #'(lambda (x) 
 	     (cond
@@ -96,6 +96,22 @@
 	       (t nil)))))
 
 ;;;; (walk-directory-by-name "/_storage/otd11/namatv/develop/git/clisp" ".git")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun find-girectory-parent (dirname name)
+  (let ((rez nil))
+  (walk-directory-by-name
+   dirname
+   name
+   :fn #'(lambda (x)
+	   (pushnew
+	    (namestring
+	     (cl-fad:pathname-parent-directory x)) rez :test #'string=)
+	   ))
+  (reverse rez)))
+
+(find-girectory-parent "~/develop/git/clisp"  ".git")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

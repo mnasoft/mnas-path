@@ -6,6 +6,7 @@
   (:export walk-file-by-extension
 	   find-filename
 	   find-filename-directory
-	   walk-directory-by-name)
+	   walk-directory-by-name
+	   find-girectory-parent)
   )
 
