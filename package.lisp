@@ -7,6 +7,6 @@
 	   find-filename
 	   find-filename-directory
 	   walk-directory-by-name
-	   find-girectory-parent)
+	   find-directory-parent)
   )
 

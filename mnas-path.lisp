@@ -95,23 +95,20 @@
 	       ((string= (first (last (pathname-directory x))) name))
 	       (t nil)))))
 
-;;;; (walk-directory-by-name "/_storage/otd11/namatv/develop/git/clisp" ".git")
+;;;; (walk-directory-by-name "e:/PRG/msys64/home/namatv/develop/git/clisp" ".git")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun find-girectory-parent (dirname name)
+(defun find-directory-parent (dirname name)
   (let ((rez nil))
   (walk-directory-by-name
    dirname
    name
    :fn #'(lambda (x)
-	   (pushnew
-	    (namestring
-	     (cl-fad:pathname-parent-directory x)) rez :test #'string=)
-	   ))
+	   (push (cl-fad:pathname-parent-directory x) rez)))
   (reverse rez)))
 
-(find-girectory-parent "~/develop/git/clisp"  ".git")
+;;;; (find-directory-parent "~/develop/git/clisp"  ".git")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
