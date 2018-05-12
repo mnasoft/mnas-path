@@ -6,6 +6,5 @@
   :license "Specify license here"
   :serial t
   :depends-on (#:cl-fad)
-  :components ((:file "package")
-               (:file "mnas-path")))
+  :components ((:file "mnas-path")))
 

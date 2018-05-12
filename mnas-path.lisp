@@ -1,8 +1,6 @@
-;;;; mnas-path.lisp
-
-(in-package #:mnas-path)
-
-;;; "mnas-path" goes here. Hacks and glory await!
+(defpackage :mnas-path
+  (:use :cl))
+(in-package :mnas-path)
 
 (defun pathname-directory-subtract (path-1 path-2 &key (absolute t))
   (do  ((dir-1  (pathname-directory path-1) (cdr dir-1))
@@ -16,16 +14,18 @@
 	(setf dir-1 nil
 	      dir-2 nil))))
 
+(export 'pathname-directory-subtract)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun walk-file-by-extension (dirname extension 
-			      &key 
-				(fn #'(lambda(x) (write-line (namestring x))))
-				(fn-extension 
-				 #'(lambda (x)
-				     (string= (pathname-type x) extension)))
-				(dir-ignore 
-				 #'(lambda (x) (string= (first (last (pathname-directory x))) ".git"))))
+			       &key 
+				 (fn #'(lambda(x) (write-line (namestring x))))
+				 (fn-extension 
+				  #'(lambda (x)
+				      (string= (pathname-type x) extension)))
+				 (dir-ignore 
+				  #'(lambda (x) (string= (first (last (pathname-directory x))) ".git"))))
   "Пример использования:
 ;;;; (walk-file-by-extension  \"/_storage/otd11/namatv/develop/git/clisp/\" \"\" :fn-extension #'(lambda (x) (member (pathname-type x) '(\"lisp\" \"txt\") :test #'string=)))
 ;;;;(walk-file-by-extension \"/_storage/otd11/namatv/develop/git/clisp/\" \"asd\")
@@ -42,15 +42,14 @@
 				     ((funcall fn-extension x))
 				     (t nil)))))
 
-;;;; (walk-file-by-extension "/_storage/otd11/namatv/develop/git/clisp/" "asd")
-;;;; (walk-file-by-extension  "/_storage/otd11/namatv/develop/git/clisp/" "" :fn-extension #'(lambda (x) (member (pathname-type x) '("lisp" "txt") :test #'string=)))
+(export 'walk-file-by-extension)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun find-filename (dirname extension)
 "Возвращает список файлов, у которых расширение соответствует extension;
 Поиск начинается с каталога dirname, вглубь дерева каталогов;
-Елементами возврвщаемого списка являются строки;
+Элементами возврвщаемого списка являются строки;
 Пример использования:
 ;;;; (find-filename  \"/_storage/otd11/namatv/develop/git/clisp/\"  \"asd\")
 "
@@ -61,12 +60,10 @@
      :fn #'(lambda (x) (push (namestring x) rez)))
     (reverse rez)))
 
-;;;; (find-filename  "/_storage/otd11/namatv/develop/git/clisp/"  "asd")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(export 'find-filename)
 
 (defun find-filename-directory (dirname extension)
-"Возвращает список каталогов, в которых присутствуют файлы с расширением extension;
+  "Возвращает список каталогов, в которых присутствуют файлы с расширением extension;
 Поиск начинается с каталога dirname, вглубь дерева каталогов;
 Елементами возврвщаемого списка являются строки;
 Пример использования:
@@ -79,9 +76,7 @@
      :fn #'(lambda (x) (pushnew (namestring (cl-fad:pathname-directory-pathname x)) rez :test #'string=)))
     (reverse rez)))
 
-;;;; (find-filename-directory "/_storage/otd11/namatv/develop/git/clisp/" "asd")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(export 'find-filename-directory)
 
 (defun walk-directory-by-name (dirname name &key (fn #'(lambda (x) (write-line (namestring x)))))
   (cl-fad:walk-directory 
@@ -95,9 +90,7 @@
 	       ((string= (first (last (pathname-directory x))) name))
 	       (t nil)))))
 
-;;;; (walk-directory-by-name "e:/PRG/msys64/home/namatv/develop/git/clisp" ".git")
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(export 'walk-directory-by-name)
 
 (defun find-directory-parent (dirname name)
   (let ((rez nil))
@@ -108,10 +101,5 @@
 	   (push (cl-fad:pathname-parent-directory x) rez)))
   (reverse rez)))
 
-;;;; (find-directory-parent "~/develop/git/clisp"  ".git")
+(export 'find-directory-parent)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;;;; (walk-directory-by-name "~/develop/git/clisp" ".git")
-
-;;;; (find-filename  "~/develop/git/clisp"  "asd")
