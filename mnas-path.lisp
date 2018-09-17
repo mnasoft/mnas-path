@@ -1,5 +1,5 @@
-(defpackage :mnas-path
-  (:use :cl))
+;;;; mnas-path.lisp
+
 (in-package :mnas-path)
 
 (defun pathname-directory-subtract (path-1 path-2 &key (absolute t))
@@ -13,8 +13,6 @@
     (if (not(equal (car dir-1) (car dir-2)))
 	(setf dir-1 nil
 	      dir-2 nil))))
-
-(export 'pathname-directory-subtract)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -42,8 +40,6 @@
 				     ((funcall fn-extension x))
 				     (t nil)))))
 
-(export 'walk-file-by-extension)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defun find-filename (dirname extension)
@@ -60,8 +56,6 @@
      :fn #'(lambda (x) (push (namestring x) rez)))
     (reverse rez)))
 
-(export 'find-filename)
-
 (defun find-filename-directory (dirname extension)
   "Возвращает список каталогов, в которых присутствуют файлы с расширением extension;
 Поиск начинается с каталога dirname, вглубь дерева каталогов;
@@ -76,8 +70,6 @@
      :fn #'(lambda (x) (pushnew (namestring (cl-fad:pathname-directory-pathname x)) rez :test #'string=)))
     (reverse rez)))
 
-(export 'find-filename-directory)
-
 (defun walk-directory-by-name (dirname name &key (fn #'(lambda (x) (write-line (namestring x)))))
   (cl-fad:walk-directory 
    dirname
@@ -90,8 +82,6 @@
 	       ((string= (first (last (pathname-directory x))) name))
 	       (t nil)))))
 
-(export 'walk-directory-by-name)
-
 (defun find-directory-parent (dirname name)
   (let ((rez nil))
   (walk-directory-by-name
@@ -100,6 +90,3 @@
    :fn #'(lambda (x)
 	   (push (cl-fad:pathname-parent-directory x) rez)))
   (reverse rez)))
-
-(export 'find-directory-parent)
-

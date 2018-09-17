@@ -1,10 +1,13 @@
 ;;;; mnas-path.asd
 
-(asdf:defsystem #:mnas-path
+(defsystem #:mnas-path
   :description "Describe mnas-path here"
-  :author "Your Name <your.name@example.com>"
-  :license "Specify license here"
+  :author "Nick Matvyeyev <mnasoft@gmail.com>"
+  :license "GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007 or later"  
   :serial t
   :depends-on (#:cl-fad)
-  :components ((:file "mnas-path")))
+  :components ((:file "package")
+	       (:file "mnas-path" :depends-on ("package"))))
+
+
 
