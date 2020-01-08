@@ -1,0 +1,28 @@
+@begin(section)
+@title(Overview)
+
+This is where you explain what your project does.
+
+@end(section)
+
+@begin(section)
+@title(Графы)
+@begin(list)
+ @item(system-graph @image[src=./system-graph.gv.png]())
+ @item(call-graph   @image[src=./call-graph.gv.png]())
+ @item(symbol-graph @image[src=./symbol-graph.gv.png]())
+ @item(class-graph  @image[src=./class-graph.gv.png]())
+@end(list)
+@end(section)
+
+@begin(section)
+@title(Function)
+@cl:with-package[name="mnas-path"](
+ @cl:doc(function pathname-directory-subtract)
+ @cl:doc(function walk-file-by-extension)
+ @cl:doc(function find-filename)
+ @cl:doc(function find-filename-directory)
+ @cl:doc(function walk-directory-by-name)
+ @cl:doc(function find-directory-parent))
+@end(section)
+
