@@ -8,6 +8,3 @@
   :depends-on (#:cl-annot #:cl-fad)
   :components ((:file "package")
 	       (:file "mnas-path" :depends-on ("package"))))
-
-
-
