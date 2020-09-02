@@ -3,7 +3,12 @@
 (in-package :cl-user)
 
 (defpackage :mnas-path
-  (:use #:cl))
+  (:use #:cl)
+  (:export find-directory-parent pathname-directory-subtract
+           walk-directory-by-name
+           find-filename-directory
+           walk-file-by-extension
+           find-filename))
 
 ;;;; (declaim (optimize (compilation-speed 0) (debug 3) (safety 0) (space 0) (speed 0)))
 
@@ -11,13 +16,11 @@
 
 (in-package :mnas-path)
 
-(annot:enable-annot-syntax)
+(export 'pathname-directory-subtract )
 
-@export
-@annot.doc:doc
+(defun pathname-directory-subtract (path-1 path-2 &key (absolute t))
 "@b(Описание:) pathname-directory-subtract
 "
-(defun pathname-directory-subtract (path-1 path-2 &key (absolute t))
   (do  ((dir-1  (pathname-directory path-1) (cdr dir-1))
 	(dir-2  (pathname-directory path-2) (cdr dir-2))
 	(flnm   (pathname-name path-2))
@@ -31,14 +34,8 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-@export
-@annot.doc:doc
-" @b(Пример использования:)
-@begin[lang=lisp](code)
- (walk-file-by-extension  \"/_storage/otd11/namatv/develop/git/clisp/\" \"\" :fn-extension #'(lambda (x) (member (pathname-type x) '(\"lisp\" \"txt\") :test #'string=)))
- (walk-file-by-extension \"/_storage/otd11/namatv/develop/git/clisp/\" \"asd\")
-@end(code)
-"
+(export 'walk-file-by-extension )
+
 (defun walk-file-by-extension (dirname extension 
 			       &key 
 				 (fn #'(lambda(x) (write-line (namestring x))))
@@ -47,7 +44,12 @@
 				      (string= (pathname-type x) extension)))
 				 (dir-ignore 
 				  #'(lambda (x) (string= (first (last (pathname-directory x))) ".git"))))
-  
+" @b(Пример использования:)
+@begin[lang=lisp](code)
+ (walk-file-by-extension  \"/_storage/otd11/namatv/develop/git/clisp/\" \"\" :fn-extension #'(lambda (x) (member (pathname-type x) '(\"lisp\" \"txt\") :test #'string=)))
+ (walk-file-by-extension \"/_storage/otd11/namatv/develop/git/clisp/\" \"asd\")
+@end(code)
+"
   (cl-fad:walk-directory dirname
 			 #'(lambda (x) 
 			     (unless (cl-fad:directory-pathname-p x)
@@ -61,8 +63,9 @@
 				     (t nil)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-@export
-@annot.doc:doc
+(export 'find-filename )
+
+(defun find-filename (dirname extension)
 "@b(Описание:) find-filename возвращает список файлов, у которых 
 расширение соответствует extension;
 
@@ -75,7 +78,6 @@
  (find-filename  \"/_storage/otd11/namatv/develop/git/clisp/\"  \"asd\")
 @end(code)
 "
-(defun find-filename (dirname extension)
   (let ((rez nil))
     (walk-file-by-extension 
      dirname
@@ -83,8 +85,9 @@
      :fn #'(lambda (x) (push (namestring x) rez)))
     (reverse rez)))
 
-@export
-@annot.doc:doc
+(export 'find-filename-directory )
+
+(defun find-filename-directory (dirname extension)
 "@b(Описание:) find-filename-directory возвращает список каталогов, 
 в которых присутствуют файлы с расширением extension;
 
@@ -97,7 +100,6 @@
  (find-filename-directory \"/_storage/otd11/namatv/develop/git/clisp/\" \"asd\")
 @end(code)
 "
-(defun find-filename-directory (dirname extension)
   (let ((rez nil))
     (walk-file-by-extension 
      dirname
@@ -105,10 +107,10 @@
      :fn #'(lambda (x) (pushnew (namestring (cl-fad:pathname-directory-pathname x)) rez :test #'string=)))
     (reverse rez)))
 
-@export
-@annot.doc:doc
-"@b(Описание:) walk-directory-by-name"
+(export 'walk-directory-by-name )
+
 (defun walk-directory-by-name (dirname name &key (fn #'(lambda (x) (write-line (namestring x)))))
+"@b(Описание:) walk-directory-by-name"
   (cl-fad:walk-directory 
    dirname
    #'(lambda (x) 
@@ -119,14 +121,15 @@
 	     (cond
 	       ((string= (first (last (pathname-directory x))) name))
 	       (t nil)))))
-@export
-@annot.doc:doc
-"@b(Описание:) find-directory-parent"
+
+(export 'find-directory-parent )
+
 (defun find-directory-parent (dirname name)
+"@b(Описание:) find-directory-parent"
   (let ((rez nil))
   (walk-directory-by-name
    dirname
    name
    :fn #'(lambda (x)
 	   (push (cl-fad:pathname-parent-directory x) rez)))
-  (reverse rez)))
+    (reverse rez)))
