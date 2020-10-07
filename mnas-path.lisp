@@ -19,8 +19,21 @@
 (export 'pathname-directory-subtract )
 
 (defun pathname-directory-subtract (path-1 path-2 &key (absolute t))
-"@b(Описание:) pathname-directory-subtract
+  "@b(Описание:) функция @b(pathname-directory-subtract) вычитает из пути
+path-1 путь path-2.
+
+ @b(Пример использования:)
+@begin[lang=lisp](code)
+ (pathname-directory-subtract \"~/quicklisp/local-projects/\" 
+                              \"~/quicklisp/local-projects/mnas/mnas-path/docs/1.txt\")
+ => #P\"/mnas/mnas-path/docs/1.txt\"
+@end(code)
 "
+#| (pathname-directory-subtract "~/quicklisp/local-projects/" 
+                                "~/quicklisp/local-projects/mnas/mnas-path/docs/1.txt")
+   (pathname-directory-subtract "~/public/" 
+                                "~/quicklisp/local-projects/mnas/mnas-path/docs/1.txt")
+|#
   (do  ((dir-1  (pathname-directory path-1) (cdr dir-1))
 	(dir-2  (pathname-directory path-2) (cdr dir-2))
 	(flnm   (pathname-name path-2))
