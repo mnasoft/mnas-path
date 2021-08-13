@@ -4,7 +4,8 @@
 
 (defpackage :mnas-path
   (:use #:cl)
-  (:export find-directory-parent pathname-directory-subtract
+  (:export find-directory-parent
+           pathname-directory-subtract
            walk-directory-by-name
            find-filename-directory
            walk-file-by-extension

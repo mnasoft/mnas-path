@@ -1,17 +1,14 @@
 @begin(section) @title(Обзор)
 
-This is where you explain what your project does.
-
-@end(section)
+Describe mnas-path here@end(section)
+@begin(section) @title(MNAS-PATH)
 
 @begin(section)
-@title(Function)
-@cl:with-package[name="mnas-path"](
- @cl:doc(function pathname-directory-subtract)
- @cl:doc(function walk-file-by-extension)
- @cl:doc(function find-filename)
- @cl:doc(function find-filename-directory)
- @cl:doc(function walk-directory-by-name)
- @cl:doc(function find-directory-parent))
+ @title(Функции)
+ @cl:with-package[name="MNAS-PATH"](
+  @cl:doc(function find-filename)
+  @cl:doc(function find-filename-directory)
+  @cl:doc(function pathname-directory-subtract)
+  @cl:doc(function walk-file-by-extension))
 @end(section)
-
+@end(section)
