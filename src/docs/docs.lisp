@@ -32,6 +32,7 @@
  Пакет документации формируется в каталоге
 ~/public_html/Common-Lisp-Programs/mnas-path.
 "
+  (mnas-package:make-html-path :mnas-path)
   (make-document)
   (make-graphs)
   (mnas-package:make-mainfest-lisp
@@ -45,4 +46,5 @@
   (mnas-package:copy-doc->public-html "mnas-path")
   (mnas-package:rsync-doc "mnas-path"))
 
-;;;; (make-all)
+#+nil
+(make-all)

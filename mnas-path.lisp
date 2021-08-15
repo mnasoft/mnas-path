@@ -1,23 +1,18 @@
 ;;;; mnas-path.lisp
 
-(in-package :cl-user)
-
-(defpackage :mnas-path
+(defpackage #:mnas-path
   (:use #:cl)
   (:export find-directory-parent
-           pathname-directory-subtract
-           walk-directory-by-name
+           find-filename
            find-filename-directory
+           )
+  (:export pathname-directory-subtract
+           )
+  (:export walk-directory-by-name
            walk-file-by-extension
-           find-filename))
-
-;;;; (declaim (optimize (compilation-speed 0) (debug 3) (safety 0) (space 0) (speed 0)))
-
-(setf sb-impl::*default-external-format* :utf8)
+           ))
 
 (in-package :mnas-path)
-
-(export 'pathname-directory-subtract )
 
 (defun pathname-directory-subtract (path-1 path-2 &key (absolute t))
   "@b(Описание:) функция @b(pathname-directory-subtract) вычитает из пути
@@ -48,8 +43,6 @@ path-1 путь path-2.
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(export 'walk-file-by-extension )
-
 (defun walk-file-by-extension (dirname extension 
 			       &key 
 				 (fn #'(lambda(x) (write-line (namestring x))))
@@ -77,15 +70,11 @@ path-1 путь path-2.
 				     (t nil)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(export 'find-filename )
 
 (defun find-filename (dirname extension)
-"@b(Описание:) find-filename возвращает список файлов, у которых 
-расширение соответствует extension;
-
-Поиск начинается с каталога dirname, вглубь дерева каталогов;
-
-Элементами возврвщаемого списка являются строки;
+"@b(Описание:) find-filename возвращает список файлов с расширением
+ extension. Поиск начинается с каталога dirname, вглубь дерева
+ каталогов. Элементами возврвщаемого списка являются строки.
 
  @b(Пример использования:)
 @begin[lang=lisp](code)
@@ -121,7 +110,7 @@ path-1 путь path-2.
      :fn #'(lambda (x) (pushnew (namestring (cl-fad:pathname-directory-pathname x)) rez :test #'string=)))
     (reverse rez)))
 
-(export 'walk-directory-by-name )
+
 
 (defun walk-directory-by-name (dirname name &key (fn #'(lambda (x) (write-line (namestring x)))))
 "@b(Описание:) walk-directory-by-name"
@@ -135,8 +124,6 @@ path-1 путь path-2.
 	     (cond
 	       ((string= (first (last (pathname-directory x))) name))
 	       (t nil)))))
-
-(export 'find-directory-parent )
 
 (defun find-directory-parent (dirname name)
 "@b(Описание:) find-directory-parent"
