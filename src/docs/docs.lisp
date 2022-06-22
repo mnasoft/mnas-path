@@ -38,7 +38,7 @@
   (mnas-package:make-mainfest-lisp
    '(:mnas-path :mnas-path/docs)
    "Mnas-Path"
-   '("Nick Matvyeyev")
+   '("Mykola Matvyeyev")
    (mnas-package:find-sources "mnas-path")
    :output-format of)
   (codex:document :mnas-path)
