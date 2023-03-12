@@ -1,6 +1,6 @@
 ;;;; mnas-path.lisp
 
-(defpackage #:mnas-path
+(defpackage :mnas-path
   (:use #:cl)
   (:export find-directory-parent
            find-filename

@@ -1,4 +1,4 @@
-(defpackage #:mnas-path/docs
+(defpackage :mnas-path/docs
   (:use #:cl ) 
   (:nicknames "MPATH/DOCS")
   (:export make-all)
