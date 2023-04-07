@@ -5,7 +5,7 @@
   :author "Mykola Matvyeyev <mnasoft@gmail.com>"
   :license "GNU GENERAL PUBLIC LICENSE Version 3, 29 June 2007 or later"  
   :serial nil
-  :depends-on ("cl-fad") 
+  :depends-on ("cl-fad" "mnas-string") 
   :components ((:module "src"
                 :serial nil
                 :components ((:file "mnas-path")))))

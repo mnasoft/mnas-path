@@ -10,7 +10,8 @@
            )
   (:export walk-directory-by-name
            walk-file-by-extension
-           ))
+           )
+  (:export directory-basename))
 
 (in-package :mnas-path)
 
@@ -134,3 +135,15 @@ path-1 путь path-2.
    :fn #'(lambda (x)
 	   (push (cl-fad:pathname-parent-directory x) rez)))
     (reverse rez)))
+
+(defun directory-basename (path)
+  "@b(Описание:) функция @b(dir-basename) возвращает базовое имя каталога.
+
+ @b(Пример использования:)
+@begin[lang=lisp](code)
+ (directory-basename #P\"D:/home/_namatv/PRG/msys64/\") => \"msys64\"
+@end(code)
+"
+  (first
+   (nreverse
+    (mnas-string:split "/" (namestring path)))))
