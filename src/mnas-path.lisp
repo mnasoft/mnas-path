@@ -7,6 +7,7 @@
            find-filename-directory
            )
   (:export pathname-directory-subtract
+           pathname-merge
            )
   (:export walk-directory-by-name
            walk-file-by-extension
@@ -147,3 +148,11 @@ path-1 путь path-2.
   (first
    (nreverse
     (mnas-string:split "/" (namestring path)))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defun pathname-merge (path-root path-file )
+  (pathname
+   (concatenate 'string
+                (namestring path-root)
+                (namestring path-file))))
